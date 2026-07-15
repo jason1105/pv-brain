@@ -63,6 +63,7 @@ class Manifest:
     workflow: str
     draft: bool
     seed: int
+    offline: bool = True
     created_at: str = field(default_factory=_now)
     steps: list[StepRecord] = field(default_factory=list)
     artifacts: dict[str, dict[str, str]] = field(default_factory=dict)
@@ -113,6 +114,7 @@ class Manifest:
             "channel_id": self.channel_id,
             "workflow": self.workflow,
             "draft": self.draft,
+            "offline": self.offline,
             "seed": self.seed,
             "created_at": self.created_at,
             "steps": [s.to_dict() for s in self.steps],
@@ -135,6 +137,7 @@ class Manifest:
             workflow=d["workflow"],
             draft=d["draft"],
             seed=d["seed"],
+            offline=d.get("offline", d["draft"]),
             created_at=d["created_at"],
         )
         m.steps = [StepRecord.from_dict(s) for s in d["steps"]]

@@ -120,8 +120,27 @@ def _cmd_doctor(args: argparse.Namespace) -> int:
 
         check("profile", _profile)
 
-    _log("providers: llm=mock tts=silence,tone visuals=slides renderer=ffmpeg publisher=dryrun")
-    _log("real providers (anthropic, edge-tts): milestone M3")
+    import os
+
+    keys = {
+        "anthropic": "ANTHROPIC_API_KEY",
+        "ark": "ARK_API_KEY",
+        "gemini": "GEMINI_API_KEY",
+    }
+    configured = [name for name, env in keys.items() if os.environ.get(env, "").strip()]
+    missing = [f"{name} (set {env})" for name, env in keys.items() if name not in configured]
+    _log(f"llm providers ready: {', '.join(['mock (offline)'] + configured)}")
+    if missing:
+        _log(f"llm providers needing keys: {', '.join(missing)}")
+    try:
+        import edge_tts  # noqa: F401
+
+        _log("tts providers ready: tone/silence (offline), edge")
+    except ImportError:
+        _log(
+            "tts providers ready: tone/silence (offline); "
+            "edge needs: pip install 'pvfactory[edge]'"
+        )
     return 0 if ok else 2
 
 
