@@ -5,6 +5,16 @@ evolution of the documentation, not application releases.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.3.0] — 2026-07-15
+
+### Added
+
+- `research/2026-07-15-youtube-12-prompt-playbook.md` — external source
+  material: the 12-prompt YouTube playbook, with pipeline mapping and
+  assessment.
+- `prompts/youtube/` — reusable, variable-normalized prompt templates
+  grouped by pipeline stage.
+
 ## [0.2.0] — 2026-07-15
 
 ### Changed
