@@ -5,6 +5,18 @@ evolution of the documentation, not application releases.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.4.0] — 2026-07-15
+
+### Added
+
+- `specs/` — specification suite for PV Factory, the auto video generation
+  software (overview, workflow & pipeline, providers, CLI & outputs,
+  quality), finalized after a three-lens adversarial design review.
+- `workflow/produce-video.md` — business definition of the first executable
+  workflow.
+- ADR-0003 (runtime in monorepo), ADR-0004 (CLI engine first),
+  ADR-0005 (offline-first providers with draft labeling).
+
 ## [0.3.0] — 2026-07-15
 
 ### Added

@@ -14,6 +14,7 @@ reserved for the landing `README.md` and, going forward, implementation code.
 | Directory | Purpose |
 |-----------|---------|
 | [`vision/`](vision/) | Product vision |
+| [`specs/`](specs/) | Product & technical specifications |
 | [`architecture/`](architecture/) | System architecture |
 | [`adr/`](adr/) | Architecture Decision Records |
 | [`brainstorm/`](brainstorm/) | Early ideas |
