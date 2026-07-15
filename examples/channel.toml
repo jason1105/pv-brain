@@ -18,4 +18,10 @@ fps = 30
 # font_path = "/path/to/NotoSansCJK.otf"   # required for CJK languages
 
 [providers]
-tts = "tone"                       # offline: tone | silence (M3 adds real TTS)
+# Real content providers (used when running WITHOUT --offline):
+llm = "anthropic"                  # anthropic | ark (Volcengine/Doubao) | gemini
+llm_model = "claude-sonnet-5"      # ark: your endpoint/model id; gemini: e.g. gemini-2.5-flash
+tts = "edge"                       # edge (real speech, keyless) | tone | silence
+tts_voice = "en-US-GuyNeural"
+# API keys come from env vars only: ANTHROPIC_API_KEY / ARK_API_KEY / GEMINI_API_KEY.
+# With --offline, the mock LLM + tone TTS are used regardless and output is a DRAFT.

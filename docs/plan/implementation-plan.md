@@ -70,8 +70,10 @@ in CI; suite wall-clock within budget.
 
 **Deliverables**
 
-- `anthropic` LLM adapter through the same parse/validate layer +
-  fixture-based contract tests (canned API responses).
+- LLM adapters through the same parse/validate layer + fixture-based
+  contract tests (canned API responses): `anthropic`, `ark`
+  (Volcengine/Doubao, OpenAI-compatible), `gemini` - whichever key the
+  operator supplies works.
 - `edge` TTS adapter (real speech, per-segment durations) + contract tests.
 - Provider resolution per ADR-0005: real providers default, actionable
   error when unavailable.

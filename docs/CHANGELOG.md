@@ -5,6 +5,18 @@ evolution of the documentation, not application releases.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.7.0] — 2026-07-15
+
+### Added
+
+- M3 real providers: `anthropic`, `ark` (Volcengine/Doubao), `gemini` LLM
+  adapters (thin HTTP, shared parse layer, contract-tested with canned
+  responses); `edge` TTS (optional extra `pvfactory[edge]`).
+- Provider registry in `runs.py`; profile `[providers]` now drives real
+  provider selection; manifest records the offline flag so `resume`
+  reconstructs the original provider mode.
+- `doctor` reports configured API keys and edge-tts availability.
+
 ## [0.6.0] — 2026-07-15
 
 ### Added

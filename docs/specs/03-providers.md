@@ -6,7 +6,7 @@ Five interfaces, each cutting along a real vendor/capability boundary:
 
 | Interface | Capability | MVP implementations |
 |-----------|-----------|---------------------|
-| `LLMProvider` | Structured text generation | `mock` (deterministic, seeded), `anthropic` |
+| `LLMProvider` | Structured text generation | `mock` (deterministic, seeded), `anthropic`, `ark` (Volcengine/Doubao), `gemini` |
 | `TTSProvider` | Narration synthesis | `silence` (CI), `tone` (CI, audible sync check), `edge` (real speech, network, no key) |
 | `VisualProvider` | Visual assets for segments | `slides` (styled PIL text-slides) |
 | `Renderer` | Timeline → video file | `ffmpeg` (bundled static binary) |
@@ -95,8 +95,11 @@ implementations, not interface changes.
   [`04-cli-and-outputs.md`](04-cli-and-outputs.md).
 - Global config: `pvfactory.toml` (provider defaults, router table, output
   root).
-- Secrets **only** via environment variables (`ANTHROPIC_API_KEY`, …).
-  Never in TOML, never in the manifest, never in logs.
+- Secrets **only** via environment variables (`ANTHROPIC_API_KEY`,
+  `ARK_API_KEY`, `GEMINI_API_KEY`, …). Never in TOML, never in the manifest,
+  never in logs - API keys travel in request headers, never in URLs.
+- Real LLM adapters are thin HTTP (no vendor SDKs); the Ark base URL is
+  overridable via `ARK_BASE_URL` for other regions/gateways.
 
 ## Draft policy (ADR-0005)
 
