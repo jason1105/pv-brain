@@ -47,9 +47,10 @@ class StepRecord:
 
     @classmethod
     def from_dict(cls, d: dict[str, Any]) -> StepRecord:
-        rec = cls(name=d["name"])
-        for k, v in d.items():
-            setattr(rec, k, v)
+        try:
+            rec = cls(**d)  # dataclass __init__ rejects unknown keys
+        except TypeError as e:
+            raise ValueError(f"invalid step record: {e}") from e
         if rec.status not in _STATUSES:
             raise ValueError(f"unknown step status {rec.status!r}")
         return rec
@@ -76,6 +77,7 @@ class Manifest:
         rec = self.step(name)
         rec.status = STATUS_RUNNING
         rec.started_at = _now()
+        rec.error = None  # a re-run clears any prior failure
         return rec
 
     def finish_step(
@@ -123,7 +125,8 @@ class Manifest:
     @classmethod
     def load(cls, store: ArtifactStore) -> Manifest:
         d = store.get_json(f"artifact://{MANIFEST_NAME}")
-        assert isinstance(d, dict)
+        if not isinstance(d, dict):
+            raise ValueError("manifest is not a JSON object")
         if d.get("schema_version") != SCHEMA_VERSION:
             raise ValueError(f"unsupported manifest schema_version {d.get('schema_version')!r}")
         m = cls(

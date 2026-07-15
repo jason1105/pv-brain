@@ -11,9 +11,9 @@ from __future__ import annotations
 import io
 import math
 import random
-import struct
 import wave
 from abc import ABC, abstractmethod
+from array import array
 from dataclasses import dataclass
 
 from .errors import ValidationError
@@ -114,15 +114,19 @@ class ToneTTS(_OfflineTTS):
     name = "tone"
 
     def _frames(self, n_frames: int, index: int) -> bytes:
+        # Hot path (SAMPLE_RATE iterations per audio second): precompute the
+        # phase step, use array('h'), and apply the envelope only inside the
+        # short fade windows instead of per-sample.
         freq = 220.0 + 40.0 * (index % 8)
         amp = 0.25 * 32767
+        step = 2 * math.pi * freq / SAMPLE_RATE
         fade = min(n_frames // 10, SAMPLE_RATE // 20) or 1
-        buf = bytearray()
-        for n in range(n_frames):
-            envelope = min(1.0, n / fade, (n_frames - 1 - n) / fade)
-            sample = int(amp * envelope * math.sin(2 * math.pi * freq * n / SAMPLE_RATE))
-            buf += struct.pack("<h", sample)
-        return bytes(buf)
+        samples = array("h", (int(amp * math.sin(step * n)) for n in range(n_frames)))
+        for n in range(min(fade, n_frames)):
+            envelope = n / fade
+            samples[n] = int(samples[n] * envelope)
+            samples[-(n + 1)] = int(samples[-(n + 1)] * envelope)
+        return samples.tobytes()
 
 
 OFFLINE_TTS = {"silence": SilenceTTS, "tone": ToneTTS}

@@ -21,36 +21,23 @@ Schema = dict[str, type | tuple]
 
 
 def extract_json(text: str) -> dict:
-    """Extract the first JSON object from possibly-noisy LLM output."""
+    """Extract the first JSON *object* from possibly-noisy LLM output.
+
+    Prose may contain stray braces (e.g. "the {topic} JSON"), so every '{'
+    is a candidate and the real parser decides - never a hand-rolled scan.
+    """
+    decoder = json.JSONDecoder()
     start = text.find("{")
-    if start == -1:
-        raise ValidationError("LLM output contains no JSON object")
-    depth = 0
-    in_str = False
-    esc = False
-    for i, ch in enumerate(text[start:], start):
-        if esc:
-            esc = False
+    while start != -1:
+        try:
+            obj, _ = decoder.raw_decode(text, start)
+        except json.JSONDecodeError:
+            start = text.find("{", start + 1)
             continue
-        if ch == "\\":
-            esc = in_str
-            continue
-        if ch == '"':
-            in_str = not in_str
-        elif not in_str:
-            if ch == "{":
-                depth += 1
-            elif ch == "}":
-                depth -= 1
-                if depth == 0:
-                    try:
-                        obj = json.loads(text[start : i + 1])
-                    except json.JSONDecodeError as e:
-                        raise ValidationError(f"LLM output is not valid JSON: {e}") from e
-                    if not isinstance(obj, dict):
-                        raise ValidationError("LLM output JSON is not an object")
-                    return obj
-    raise ValidationError("LLM output JSON object is unterminated")
+        if isinstance(obj, dict):
+            return obj
+        start = text.find("{", start + 1)
+    raise ValidationError("LLM output contains no valid JSON object")
 
 
 def validate_schema(obj: dict, schema: Schema) -> dict:

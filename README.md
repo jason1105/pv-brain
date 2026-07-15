@@ -15,8 +15,12 @@
 ```bash
 pip install -e ".[dev]"
 pvfactory doctor                       # verify the environment
-pvfactory produce --profile channel.toml --topic "your topic" --offline
+pvfactory produce --profile examples/channel.toml --topic "your topic" --offline
 ```
+
+The profile schema is documented in
+[`docs/specs/04-cli-and-outputs.md`](docs/specs/04-cli-and-outputs.md);
+[`examples/channel.toml`](examples/channel.toml) is a working starting point.
 
 Offline runs produce clearly-labeled DRAFT packages (mock content, tone
 audio). Real LLM/TTS providers arrive in milestone M3 - see

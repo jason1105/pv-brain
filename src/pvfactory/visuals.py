@@ -177,10 +177,7 @@ class SlidesVisualProvider:
         # accent field for contrast
         draw.rectangle([0, h * 0.72, w, h], fill=style.accent)
         words = text.split()[:5]
-        font = ImageFont.truetype(
-            str(Path(profile.font_path) if profile.font_path else bundled_font_path(bold=True)),
-            150,
-        )
+        font = load_font(profile, 150, bold=True)
         # shrink until it fits
         while font.size > 40:
             lines = _wrap(draw, " ".join(words), font, w - 160)

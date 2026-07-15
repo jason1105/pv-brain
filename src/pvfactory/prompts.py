@@ -16,7 +16,6 @@ from .profile import ChannelProfile
 
 @dataclass(frozen=True)
 class Prompt:
-    task: str
     text: str
     prompt_ref: str
 
@@ -41,7 +40,7 @@ def brief_prompt(profile: ChannelProfile, topic: str) -> Prompt:
         '  "thumbnail_text" (string): 3-5 words for the thumbnail,\n'
         '  "thumbnail_emotion" (string).\n'
     )
-    return Prompt("brief", text, "docs/prompts/youtube/production.md#faceless-video-concept")
+    return Prompt(text, "docs/prompts/youtube/production.md#faceless-video-concept")
 
 
 def script_prompt(profile: ChannelProfile, topic: str, angle: str) -> Prompt:
@@ -60,7 +59,7 @@ def script_prompt(profile: ChannelProfile, topic: str, angle: str) -> Prompt:
         '     "visual_intent" (string, what should be on screen).\n'
         "The first segment must be role=hook and the last role=cta.\n"
     )
-    return Prompt("script", text, "docs/prompts/youtube/production.md#high-retention-script")
+    return Prompt(text, "docs/prompts/youtube/production.md#high-retention-script")
 
 
 def metadata_prompt(profile: ChannelProfile, topic: str, working_title: str) -> Prompt:
@@ -73,4 +72,4 @@ def metadata_prompt(profile: ChannelProfile, topic: str, working_title: str) -> 
         '  "tags" (list of 8-15 strings),\n'
         '  "category" (string).\n'
     )
-    return Prompt("metadata", text, "docs/prompts/youtube/packaging.md#viral-title-generator")
+    return Prompt(text, "docs/prompts/youtube/packaging.md#viral-title-generator")

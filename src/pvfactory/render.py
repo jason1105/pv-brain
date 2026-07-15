@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import re
 import subprocess
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -18,6 +19,12 @@ import imageio_ffmpeg
 from .errors import StepError, ValidationError
 
 FFMPEG_TIMEOUT_S = 300
+
+
+def _concat_quote(path: Path) -> str:
+    """Quote a path for an ffmpeg concat list. The format has no in-string
+    escape: a literal single quote must be spliced as '\\''."""
+    return "'" + path.as_posix().replace("'", "'\\''") + "'"
 
 
 @dataclass(frozen=True)
@@ -62,28 +69,31 @@ class FfmpegRenderer:
         if not audio_path.is_file():
             raise ValidationError("renderer: missing audio track")
 
-        concat = out_path.parent / "concat.txt"
-        lines = []
-        for e in entries:
-            lines.append(f"file '{e.image_path.as_posix()}'")
-            lines.append(f"duration {e.duration_s:.3f}")
-        # concat demuxer quirk: repeat the last file so its duration applies
-        lines.append(f"file '{entries[-1].image_path.as_posix()}'")
-        concat.write_text("\n".join(lines) + "\n", "utf-8")
+        # The concat list is renderer-internal scratch, not a package file
+        # (spec 04 defines the exact package contents) - keep it in a tempdir.
+        with tempfile.TemporaryDirectory(prefix="pvfactory-render-") as tmp:
+            concat = Path(tmp) / "concat.txt"
+            lines = []
+            for e in entries:
+                lines.append(f"file {_concat_quote(e.image_path)}")
+                lines.append(f"duration {e.duration_s:.3f}")
+            # concat demuxer quirk: repeat the last file so its duration applies
+            lines.append(f"file {_concat_quote(entries[-1].image_path)}")
+            concat.write_text("\n".join(lines) + "\n", "utf-8")
 
-        proc = _run(
-            [
-                "-y",
-                "-f", "concat", "-safe", "0", "-i", concat.as_posix(),
-                "-i", audio_path.as_posix(),
-                "-c:v", "libx264", "-tune", "stillimage",
-                "-vf", f"fps={fps},format=yuv420p",
-                "-c:a", "aac",
-                "-shortest",
-                out_path.as_posix(),
-            ],
-            timeout=timeout_s,
-        )
+            proc = _run(
+                [
+                    "-y",
+                    "-f", "concat", "-safe", "0", "-i", concat.as_posix(),
+                    "-i", audio_path.as_posix(),
+                    "-c:v", "libx264", "-tune", "stillimage",
+                    "-vf", f"fps={fps},format=yuv420p",
+                    "-c:a", "aac",
+                    "-shortest",
+                    out_path.as_posix(),
+                ],
+                timeout=timeout_s,
+            )
         if proc.returncode != 0:
             raise StepError("render_video", f"ffmpeg failed:\n{proc.stderr[-2000:]}")
         return self.verify(out_path)

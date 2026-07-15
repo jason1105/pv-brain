@@ -31,6 +31,9 @@ def _cmd_produce(args: argparse.Namespace) -> int:
         topics.append(args.topic)
     if args.backlog:
         backlog = Path(args.backlog)
+        if not backlog.is_file():
+            _log(f"error: backlog file not found: {backlog}")
+            return 2
         topics += [t.strip() for t in backlog.read_text("utf-8").splitlines() if t.strip()]
     if not topics:
         _log("error: provide --topic and/or a non-empty --backlog")

@@ -27,6 +27,7 @@ from .tts import OFFLINE_TTS
 from .visuals import SlidesVisualProvider, validate_glyph_coverage
 
 PROFILE_SNAPSHOT = "profile.toml"
+TOPIC_ARTIFACT = "topic.txt"
 
 
 def slugify(text: str, max_len: int = 48) -> str:
@@ -90,7 +91,7 @@ def produce_video(
 
     store = LocalArtifactStore(pkg_dir)
     shutil.copy(profile_path, pkg_dir / PROFILE_SNAPSHOT)  # resume needs the profile
-    topic_ref = store.put_text("topic.txt", topic)
+    topic_ref = store.put_text(TOPIC_ARTIFACT, topic)
 
     manifest = Manifest(
         run_id=run_id,
@@ -110,21 +111,23 @@ def produce_video(
     runner = Runner(build_workflow(), ctx, manifest)
     manifest.save(store)
     runner.run(log)
-
-    LocalChannelStore(output_root / "channels.json").record_topic(
-        profile.channel_id, topic, run_id
-    )
+    _record_topic(output_root, profile.channel_id, topic, run_id)
     return pkg_dir
 
 
+def _record_topic(output_root: Path, channel_id: str, topic: str, run_id: str) -> None:
+    LocalChannelStore(output_root / "channels.json").record_topic(channel_id, topic, run_id)
+
+
 def find_run(output_root: Path, run_id: str) -> Path:
-    """Locate a run's package directory by run_id."""
-    for manifest_path in output_root.glob(f"*/*/{MANIFEST_NAME}"):
+    """Locate a run's package directory by run_id. Foreign or corrupt
+    manifest.json files under the output root are skipped, never fatal."""
+    for manifest_path in output_root.rglob(MANIFEST_NAME):
         store = LocalArtifactStore(manifest_path.parent)
         try:
             if Manifest.load(store).run_id == run_id:
                 return manifest_path.parent
-        except (ValueError, KeyError):
+        except Exception:  # noqa: BLE001 - any unreadable manifest is not ours
             continue
     raise ConfigError(f"no run with id {run_id!r} under {output_root}")
 
@@ -144,7 +147,11 @@ def resume_run(
         providers=providers,
         seed=manifest.seed,
         draft=manifest.draft,
-        artifacts={"topic": "artifact://topic.txt"},
+        artifacts={"topic": f"artifact://{TOPIC_ARTIFACT}"},
     )
     Runner(build_workflow(), ctx, manifest).run(log)
+    # runs finished via resume must reach topic history too (record_topic
+    # dedupes by run_id, so resuming an already-recorded run is a no-op)
+    topic = store.get_text(f"artifact://{TOPIC_ARTIFACT}")
+    _record_topic(output_root, manifest.channel_id, topic, manifest.run_id)
     return pkg_dir

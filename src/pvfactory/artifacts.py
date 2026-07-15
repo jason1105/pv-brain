@@ -55,7 +55,16 @@ class ArtifactStore(ABC):
         return hashlib.sha256(self.get_bytes(ref)).hexdigest()
 
 
-class LocalArtifactStore(ArtifactStore):
+class _StreamingHashMixin:
+    """Stream-hash from disk so large artifacts (video.mp4) are never read
+    whole into memory just to fingerprint them."""
+
+    def sha256(self, ref: str) -> str:
+        with self.path_for(ref).open("rb") as f:  # type: ignore[attr-defined]
+            return hashlib.file_digest(f, "sha256").hexdigest()
+
+
+class LocalArtifactStore(_StreamingHashMixin, ArtifactStore):
     """Artifacts as files under a run directory."""
 
     def __init__(self, root: Path):

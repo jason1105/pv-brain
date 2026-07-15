@@ -14,7 +14,7 @@ from typing import Any
 
 from .artifacts import ArtifactStore, is_ref
 from .errors import StepError, ValidationError
-from .manifest import STATUS_DONE, Manifest, StepRecord
+from .manifest import STATUS_AWAITING_APPROVAL, STATUS_DONE, Manifest, StepRecord
 
 
 @dataclass
@@ -97,6 +97,10 @@ class Runner:
                 self.ctx.artifacts.update(rec.outputs)
                 log(f"skip {step.name} (done)")
                 continue
+            if rec.status == STATUS_AWAITING_APPROVAL:
+                # The human gate (spec 02): never execute through it.
+                log(f"halt {step.name} (awaiting approval)")
+                return self.manifest
             self.manifest.start_step(step.name)
             self.manifest.save(self.ctx.store)
             log(f"run  {step.name}")

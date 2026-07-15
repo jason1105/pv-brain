@@ -5,8 +5,6 @@ docs/specs/02). Validation at every step boundary - the pipeline must never
 
 from __future__ import annotations
 
-import json
-
 from . import prompts
 from .engine import RunContext, StepDef, StepResult, Workflow
 from .errors import ValidationError
@@ -194,6 +192,9 @@ def package_metadata(ctx: RunContext) -> StepResult:
     meta["description"] = meta["description"].rstrip() + "\n\nChapters:\n" + "\n".join(chapters)
     meta["language"] = ctx.profile.language
     meta["draft"] = ctx.draft
+    # operator-complete (spec 04): every upload field present, safe default
+    meta["visibility"] = "unlisted"
+
     ref = ctx.store.put_json("metadata.json", meta)
     return StepResult({"metadata": ref}, _provenance(ctx, prompt))
 
@@ -241,12 +242,9 @@ def build_workflow() -> Workflow:
             StepDef(
                 "publish",
                 ("video", "thumbnail", "captions", "metadata"),
-                ("publish_result", "publish_checklist"),
+                ("publish_result",),  # a checklist is publisher-specific extra output
                 publish,
             ),
         ],
     )
 
-
-def _json_dumps(obj: object) -> str:
-    return json.dumps(obj, ensure_ascii=False, indent=2)

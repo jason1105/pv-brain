@@ -5,6 +5,7 @@ Schema per docs/specs/04-cli-and-outputs.md.
 
 from __future__ import annotations
 
+import re
 import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -72,6 +73,11 @@ def load_profile(path: Path | str) -> ChannelProfile:
     for req in ("id", "name", "niche", "audience"):
         if not channel.get(req):
             raise ConfigError(f"profile [channel] missing required key {req!r}")
+    if not re.fullmatch(r"[a-z0-9][a-z0-9_-]*", str(channel["id"])):
+        raise ConfigError(
+            "[channel] id must be a slug (lowercase letters, digits, '-', '_') - "
+            "it becomes a directory name"
+        )
 
     content = data.get("content", {})
     _reject_unknown("content", content)
@@ -89,6 +95,11 @@ def load_profile(path: Path | str) -> ChannelProfile:
         w, h = (int(x) for x in str(resolution).lower().split("x"))
         if w < 64 or h < 64:
             raise ValueError
+        if w % 2 or h % 2:
+            raise ConfigError(
+                f"[render] resolution must have even width and height (libx264/yuv420p), "
+                f"got {resolution!r}"
+            )
     except ValueError:
         raise ConfigError(
             f"[render] resolution must look like '1920x1080', got {resolution!r}"

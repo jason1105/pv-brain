@@ -34,6 +34,9 @@ class LocalChannelStore(ChannelStore):
 
     def record_topic(self, channel_id: str, topic: str, run_id: str) -> None:
         data = self._load()
-        data["channels"].setdefault(channel_id, []).append({"topic": topic, "run_id": run_id})
+        entries = data["channels"].setdefault(channel_id, [])
+        if any(e["run_id"] == run_id for e in entries):
+            return  # idempotent: resuming a recorded run must not duplicate
+        entries.append({"topic": topic, "run_id": run_id})
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.path.write_text(json.dumps(data, ensure_ascii=False, indent=2), "utf-8")

@@ -5,6 +5,7 @@ The dry-run checklist is concrete upload steps, not prose (spec 03).
 
 from __future__ import annotations
 
+import datetime as _dt
 from abc import ABC, abstractmethod
 
 
@@ -39,11 +40,12 @@ class DryRunPublisher(Publisher):
                 "   review playback, then switch to Public.",
             ]
         )
-        result = {
+        return {
             "platform": "youtube",
             "mode": "dry_run",
             "uploaded": False,
             "video_id": None,
+            # the analytics join key (spec 02): when/what this run delivered
+            "completed_at": _dt.datetime.now(_dt.UTC).isoformat(timespec="seconds"),
             "checklist": checklist,
         }
-        return result
