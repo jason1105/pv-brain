@@ -7,8 +7,20 @@
 | Path | Purpose |
 |------|---------|
 | [`docs/`](docs/) | All documentation: vision, architecture, ADRs, specs, plans, prompts, research. |
+| [`src/pvfactory/`](src/pvfactory/) | PV Factory - the auto video generation pipeline (first executable workflow). |
+| [`tests/`](tests/) | Test suite for PV Factory. |
 
-Implementation code will live in dedicated top-level directories alongside `docs/`.
+## PV Factory quickstart
+
+```bash
+pip install -e ".[dev]"
+pvfactory doctor                       # verify the environment
+pvfactory produce --profile channel.toml --topic "your topic" --offline
+```
+
+Offline runs produce clearly-labeled DRAFT packages (mock content, tone
+audio). Real LLM/TTS providers arrive in milestone M3 - see
+[`docs/plan/`](docs/plan/) and [`docs/specs/`](docs/specs/).
 
 ## New here?
 
