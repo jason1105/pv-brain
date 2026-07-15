@@ -5,6 +5,14 @@ evolution of the documentation, not application releases.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.5.0] — 2026-07-15
+
+### Added
+
+- `plan/` — milestone-based implementation plan for PV Factory (M0
+  scaffolding → M1 engine core → M2 offline pipeline → M3 real providers +
+  acceptance run) with per-milestone exit gates and a risk register.
+
 ## [0.4.0] — 2026-07-15
 
 ### Added
