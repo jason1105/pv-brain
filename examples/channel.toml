@@ -1,0 +1,21 @@
+schema_version = 1
+
+[channel]
+id = "tech-explains"
+name = "Tech Explains"
+niche = "consumer tech explainers"
+audience = "curious non-experts, 18-40"
+language = "en"
+
+[content]
+tone = "curious, punchy, no hype"
+video_minutes_target = 5
+style = "dark"                     # dark | light | bold
+
+[render]
+resolution = "1920x1080"
+fps = 30
+# font_path = "/path/to/NotoSansCJK.otf"   # required for CJK languages
+
+[providers]
+tts = "tone"                       # offline: tone | silence (M3 adds real TTS)

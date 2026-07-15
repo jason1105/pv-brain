@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pvfactory"
+version = "0.1.0"
+description = "PV Factory - automated faceless-video production pipeline (the first executable workflow of pv-brain)"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Proprietary" }
+dependencies = [
+    # Pinned per docs/specs/05-quality.md: imageio-ffmpeg must be a version
+    # whose wheel bundles the static ffmpeg binary (no runtime download).
+    "Pillow>=12,<13",
+    "imageio-ffmpeg>=0.5,<0.7",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.scripts]
+pvfactory = "pvfactory.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"pvfactory.fonts" = ["*.ttf", "LICENSE*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

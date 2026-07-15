@@ -5,6 +5,15 @@ evolution of the documentation, not application releases.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.6.0] — 2026-07-15
+
+### Added
+
+- PV Factory MVP milestones M0-M2 (`src/pvfactory/`, `tests/`): workflow
+  engine with durable resumable runs, the 9-step produce-video pipeline,
+  offline providers, ffmpeg renderer with decode verification, headless CLI
+  (`produce`/`resume`/`inspect`/`doctor`), 39-test suite, path-filtered CI.
+
 ## [0.5.0] — 2026-07-15
 
 ### Added
