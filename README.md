@@ -2,28 +2,21 @@
 
 **pv-brain** is the long-term knowledge repository for building an **Autonomous Content Company**.
 
+## Layout
+
+| Path | Purpose |
+|------|---------|
+| [`docs/`](docs/) | All documentation: vision, architecture, ADRs, specs, plans, prompts, research. |
+
+Implementation code will live in dedicated top-level directories alongside `docs/`.
+
 ## New here?
 
 Start with:
 
-1. `GETTING_STARTED.md` for a quick introduction.
-2. `USER_GUIDE.md` for repository conventions and workflows.
-3. `vision/` to understand the long-term direction.
-4. `architecture/` to understand how the system is organized.
+1. [`docs/GETTING_STARTED.md`](docs/GETTING_STARTED.md) for a quick introduction.
+2. [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md) for repository conventions and workflows.
+3. [`docs/vision/`](docs/vision/) to understand the long-term direction.
+4. [`docs/architecture/`](docs/architecture/) to understand how the system is organized.
 
-## Repository Structure
-
-| Directory | Purpose |
-|-----------|---------|
-| vision/ | Product vision |
-| architecture/ | System architecture |
-| adr/ | Architecture Decision Records |
-| brainstorm/ | Early ideas |
-| knowledge/ | Reusable knowledge |
-| workflow/ | Business workflows |
-| agents/ | Agent definitions |
-| prompts/ | Prompt assets |
-| research/ | External research |
-| assets/ | Diagrams and images |
-
-See `ROADMAP.md` for the project roadmap and `CHANGELOG.md` for notable repository changes.
+See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the project roadmap and [`docs/CHANGELOG.md`](docs/CHANGELOG.md) for notable repository changes.
