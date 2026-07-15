@@ -5,6 +5,17 @@ evolution of the documentation, not application releases.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.2.0] — 2026-07-15
+
+### Changed
+
+- Consolidated all documentation under `docs/` to keep the repository root
+  free for implementation code. Root `README.md` remains as the landing page.
+
+### Added
+
+- `docs/README.md` as the documentation index.
+
 ## [0.1.0] — 2026-07-05
 
 ### Added
