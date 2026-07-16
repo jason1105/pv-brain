@@ -18,13 +18,18 @@ pvfactory doctor                       # verify the environment
 pvfactory produce --profile examples/channel.toml --topic "your topic" --offline
 ```
 
-The profile schema is documented in
-[`docs/specs/04-cli-and-outputs.md`](docs/specs/04-cli-and-outputs.md);
-[`examples/channel.toml`](examples/channel.toml) is a working starting point.
-
 Offline runs produce clearly-labeled DRAFT packages (mock content, tone
-audio). Real LLM/TTS providers arrive in milestone M3 - see
-[`docs/plan/`](docs/plan/) and [`docs/specs/`](docs/specs/).
+audio) - no network, no keys, no cost. Configure a real LLM (Anthropic,
+Volcengine Ark, or Gemini) and TTS provider to produce publishable video
+packages; see [`docs/manual/`](docs/manual/) for the full walkthrough.
+
+- **Operators:** [`docs/manual/`](docs/manual/) - installation, channel
+  profiles, commands, providers, the output package, troubleshooting.
+- **Contributors:** [`docs/development/`](docs/development/) - codebase
+  map, adding providers/workflow steps, testing, contribution process.
+- **Design:** [`docs/specs/`](docs/specs/) (binding contracts),
+  [`docs/adr/`](docs/adr/) (decisions), [`docs/plan/`](docs/plan/)
+  (roadmap and milestones).
 
 ## New here?
 

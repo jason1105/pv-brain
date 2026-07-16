@@ -5,6 +5,23 @@ evolution of the documentation, not application releases.
 
 The format is loosely based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [0.8.0] — 2026-07-16
+
+### Added
+
+- `manual/` — PV Factory user manual: installation & quickstart, channel
+  profile reference, command reference, providers & API keys, the output
+  package explained, troubleshooting.
+- `development/` — PV Factory developer guide: codebase map, adding an
+  LLM/TTS provider, adding a workflow step, testing guide, contribution
+  process.
+
+### Changed
+
+- Root `README.md` and `docs/README.md` now route operators and
+  contributors to the new manual/developer guide; corrected stale wording
+  claiming real providers "arrive in milestone M3" (shipped in 0.7.0).
+
 ## [0.7.0] — 2026-07-15
 
 ### Added

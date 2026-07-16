@@ -16,6 +16,8 @@ reserved for the landing `README.md` and, going forward, implementation code.
 | [`vision/`](vision/) | Product vision |
 | [`specs/`](specs/) | Product & technical specifications |
 | [`plan/`](plan/) | Implementation plan & risk register |
+| [`manual/`](manual/) | PV Factory user manual (operators) |
+| [`development/`](development/) | PV Factory developer guide (contributors) |
 | [`architecture/`](architecture/) | System architecture |
 | [`adr/`](adr/) | Architecture Decision Records |
 | [`brainstorm/`](brainstorm/) | Early ideas |
